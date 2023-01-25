@@ -1,0 +1,48 @@
+systemLog:
+  destination: file
+{% if item is defined and item == 'mongos0' %}
+  path: "/var/log/mongodb/{{ env }}/mongos0.log"
+{% endif %}
+{% if item is defined and item == 'mongos1' %}
+  path: "/var/log/mongodb/{{ env }}/mongos1.log"
+{% endif %}
+{% if item is defined and item == 'mongos2' %}
+  path: "/var/log/mongodb/{{ env }}/mongos2.log"
+{% endif %}
+  logAppend: true
+  logRotate: reopen
+processManagement:
+  fork: true
+{% if item is defined and item == 'mongos0' %}
+  pidFilePath: "/var/run/mongodb/{{ env }}/mongos-{{ mongos_port1 }}.pid"
+{% endif %}
+{% if item is defined and item == 'mongos1' %}
+  pidFilePath: "/var/run/mongodb/{{ env }}/mongos-{{ mongos_port2 }}.pid"
+{% endif %}
+{% if item is defined and item == 'mongos2' %}
+  pidFilePath: "/var/run/mongodb/{{ env }}/mongos-{{ mongos_port3 }}.pid"
+{% endif %}
+security:
+   clusterAuthMode: x509
+setParameter:
+   authenticationMechanisms: PLAIN, SCRAM-SHA-1, SCRAM-SHA-256
+   ocspEnabled: false
+net:
+{% if item is defined and item == 'mongos0' %}
+  port: {{ mongos_port1 }}
+{% endif %}
+{% if item is defined and item == 'mongos1' %}
+  port: {{ mongos_port2 }}
+{% endif %}
+{% if item is defined and item == 'mongos2' %}
+  port: {{ mongos_port3 }}
+{% endif %}
+  bindIp: localhost,{{ ansible_hostname }}
+  tls:
+   mode: preferTLS
+   CAFile: /var/lib/mongodb/cert/CA_Root_Inter.pem
+   allowConnectionsWithoutCertificates: true
+   certificateKeyFile: /var/lib/mongodb/cert/KeyWCert.pem
+   certificateKeyFilePassword: "{{ keyfile_password }}"
+sharding:
+  configDB: config_{{ env }}/{{ configsvr_rsa }}:{{ config_rsa_port }},{{ configsvr_rsb }}:{{ config_rsb_port }},{{ configsvr_rsc }}:{{ config_rsc_port }}

@@ -1,0 +1,25 @@
+---
+- block:
+  - name: make directory for /etc/mongo/{{ env }}/scripts/
+    file:
+      dest: /etc/mongo/{{ env }}/scripts/
+      state: directory
+      owner: "{{ owner }}"
+      group: "{{ group }}"
+
+  - name: layout template for /etc/mongo/{{ env }}/scripts/add_shards_to_cluster.js. the {{ configsvr_rsa }} server
+    template:
+      src:  add_shards_to_cluster.js.j2
+      dest: "/etc/mongo/{{ env }}/scripts/add_shards_to_cluster.js"
+      owner: "{{ owner }}"
+      group: "{{ group }}"
+      mode: '0644'
+      force: yes
+
+  - name: add shards to cluster
+    shell: mongo {{ configsvr_rsa }}:37018/admin /etc/mongo/{{ env }}/scripts/add_shards_to_cluster.js  -u "{{ superuser }}" -p "{{ pass }}"
+    register: shell_result
+
+  - debug:
+      var: shell_result.stdout_lines
+  tags: add_shards

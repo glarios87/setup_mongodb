@@ -1,0 +1,27 @@
+---
+#- name: enable repo services
+#  shell: subscription-manager repos --enable="{{ repo }}"
+
+- name: install mongo services
+  yum:
+    name:
+      - mongodb-enterprise.x86_64
+      - mongodb-enterprise-cryptd.x86_64
+      - mongodb-enterprise-shell.x86_64
+      - mongodb-enterprise-server.x86_64
+      - mongodb-enterprise-mongos.x86_64
+      - mongodb-database-tools.x86_64
+      - mongodb-enterprise-database-tools-extra.x86_64
+      - mongodb-enterprise-tools.x86_64
+    state: installed 
+    enablerepo: "{{ repo }}"
+    disablerepo: "{{ repo }}"
+    skip_broken: yes
+    #    autoremove: yes
+  register: yum_result
+  ignore_errors: yes
+  
+- debug: 
+    var: yum_result.stdout_lines 
+
+

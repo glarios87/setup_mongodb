@@ -1,0 +1,9 @@
+config = { _id: "config_{{ env }}",
+        members:[
+         { _id : 0, host : "{{ configsvr_rsa }}:{{ config_rsa_port }}", priority: 100 },
+         { _id : 1, host : "{{ configsvr_rsb }}:{{ config_rsb_port }}" },
+         { _id : 2, host : "{{ configsvr_rsc }}:{{ config_rsc_port }}" }
+        ]
+};
+var output = rs.initiate(config);
+printjson(output)

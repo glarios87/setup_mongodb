@@ -1,0 +1,10 @@
+---
+- name: install mongo dbtools
+  yum:
+    name:
+      - mongodb-database-tools
+      - mongodb-mongosh
+    state: installed
+    enablerepo: "{{ repo }}"
+    disablerepo: "{{ repo }}"
+    skip_broken: yes

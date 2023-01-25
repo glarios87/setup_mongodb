@@ -1,0 +1,26 @@
+---
+- block:
+  - name: start and enable mongos0.service
+    systemd:
+      name: mongos0
+      state: restarted
+      enabled: yes
+      daemon_reload: yes
+
+  - name: start and enable mongos1.service
+    systemd:
+      name: mongos1
+      state: restarted
+      enabled: yes
+      daemon_reload: yes
+
+  - name: start and enable mongos2.service
+    systemd:
+      name: mongos2
+      state: restarted
+      enabled: yes
+      daemon_reload: yes
+  tags:
+    - install
+    - reinstall
+    - start_mongos
